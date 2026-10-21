@@ -130,11 +130,11 @@ export default async function Dashboard() {
           <div className="mt-3 grid gap-3 text-sm">
             <p>
               <span className="text-ink/60">Biggest fan: </span>
-              {s.fan ? `${fullName(s.fan.profile)}, ${Math.round(s.fan.rate * 100)}% thumbs up` : "not enough votes"}
+              {s.fan ? `${fullName(s.fan.profile)} (${s.fan.profile?.email ?? "?"}), ${Math.round(s.fan.rate * 100)}% thumbs up` : "not enough votes"}
             </p>
             <p>
               <span className="text-ink/60">Toughest critic: </span>
-              {s.critic ? `${fullName(s.critic.profile)}, ${Math.round(s.critic.rate * 100)}% thumbs up` : "not enough votes"}
+              {s.critic ? `${fullName(s.critic.profile)} (${s.critic.profile?.email ?? "?"}), ${Math.round(s.critic.rate * 100)}% thumbs up` : "not enough votes"}
             </p>
           </div>
           <h3 className="mt-5 text-xs text-ink/60">Most votes cast</h3>
@@ -142,7 +142,10 @@ export default async function Dashboard() {
             {s.voters.map((v, i) => (
               <li key={i} className="flex items-center gap-2">
                 <span className="w-4 text-ink/50">{i + 1}</span>
-                <span className="flex-1 truncate">{fullName(v.profile)}</span>
+                <span className="flex-1 truncate" title={v.profile?.email ?? ""}>
+                  {fullName(v.profile)}
+                  <span className="block truncate text-[11px] text-ink/50">{v.profile?.email}</span>
+                </span>
                 <span className="h-1.5 rounded-full" style={{ width: `${(v.total / (s.voters[0]?.total || 1)) * 60}px`, background: UP }} />
                 <span className="w-6 text-right tabular-nums text-ink/60">{v.total}</span>
               </li>
