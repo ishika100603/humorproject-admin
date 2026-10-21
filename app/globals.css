@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --tile: #c9e2f0;
+  --face: #f4f9fc;
+  --ink: #141414;
+  --navy: #1d4f91;
+  --note: #f6eebc;
+  --brick: #b3261e;
+}
+
+@theme inline {
+  --color-tile: var(--tile);
+  --color-face: var(--face);
+  --color-ink: var(--ink);
+  --color-navy: var(--navy);
+  --color-note: var(--note);
+  --color-brick: var(--brick);
+  --font-sans: var(--font-archivo), Arial, sans-serif;
+  --font-hand: var(--font-hand-sc), cursive;
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--tile);
+  font-family: var(--font-sans);
+  font-weight: 300;
+}
+
+.hand {
+  font-family: var(--font-hand);
+  letter-spacing: 0.15em;
+}
+
+.card {
+  background: var(--face);
+  border: 1px solid rgb(20 20 20 / 0.15);
+  border-radius: 10px;
+}
+
+.note {
+  background: var(--note);
+  box-shadow: 0 1px 0 rgba(20, 20, 20, 0.12), 0 8px 18px -12px rgba(20, 20, 20, 0.35);
+  outline: 1px solid rgba(20, 20, 20, 0.3);
+}
+
+/* No blinking text cursor on plain text */
+body { caret-color: transparent; }
+input, textarea { caret-color: auto; }
