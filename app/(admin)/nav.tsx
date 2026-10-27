@@ -13,14 +13,14 @@ const GROUPS: [string, [string, string][]][] = [
 export default function Nav() {
   const path = usePathname();
   return (
-    <nav className="mt-6 grid gap-4 overflow-y-auto">
+    <nav className="-mx-4 mt-2 flex gap-4 overflow-x-auto px-4 pb-1 lg:mx-0 lg:mt-6 lg:grid lg:overflow-x-visible lg:overflow-y-auto lg:px-0 lg:pb-0">
       {GROUPS.map(([group, links]) => (
-        <div key={group || "top"} className="grid gap-0.5">
-          {group && <p className="px-3 pb-1 text-[11px] uppercase tracking-wide text-ink/40">{group}</p>}
+        <div key={group || "top"} className="flex shrink-0 items-center gap-0.5 lg:grid">
+          {group && <p className="hidden px-3 pb-1 text-[11px] uppercase tracking-wide text-ink/40 lg:block">{group}</p>}
           {links.map(([href, label]) => {
             const active = href === "/" ? path === "/" : path.startsWith(href);
             return (
-              <Link key={href} href={href} className={`rounded-md px-3 py-1.5 text-sm ${active ? "bg-ink text-white" : "hover:bg-white"}`}>
+              <Link key={href} href={href} className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm ${active ? "bg-ink text-white" : "hover:bg-white"}`}>
                 {label}
               </Link>
             );

@@ -42,8 +42,8 @@ export default async function Dashboard() {
 
       <section className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <Tile label="Users" value={s.totals.users} note={`${s.totals.activeVoters} have voted`} />
-        <Tile label="AI captions" value={s.totals.captions} note={`on ${s.totals.images} photos`} />
-        <Tile label="Votes" value={s.totals.votes} note={`${s.unvoted} captions still unvoted`} />
+        <Tile label="AI captions" value={s.totals.captions} note={`on ${s.totals.images} photo${s.totals.images === 1 ? "" : "s"}`} />
+        <Tile label="Votes" value={s.totals.votes} note={`${s.unvoted} caption${s.unvoted === 1 ? "" : "s"} still unvoted`} />
         <Tile label="Thumbs up rate" value={`${s.totals.upRate}%`} note="of all votes are 👍" />
       </section>
 
@@ -171,7 +171,7 @@ export default async function Dashboard() {
                   style={{ width: `${Math.min(100, Math.abs(avg as number) * 50)}%`, background: (avg as number) >= 0 ? UP : DOWN }}
                 />
               </div>
-              <p className="mt-0.5 text-[11px] text-ink/50">{n as number} captions</p>
+              <p className="mt-0.5 text-[11px] text-ink/50">{n as number} caption{n === 1 ? "" : "s"}</p>
             </div>
           ))}
           <p className="mt-4 text-xs text-ink/70">
@@ -196,7 +196,7 @@ export default async function Dashboard() {
           </ul>
           <p className="mt-4 text-sm">
             <span className="tabular-nums">{s.withHint}</span>
-            <span className="text-ink/60"> captions were written with a user hint like &quot;midterm week&quot;.</span>
+            <span className="text-ink/60"> {s.withHint === 1 ? "caption was" : "captions were"} written with a user hint like &quot;midterm week&quot;.</span>
           </p>
         </div>
       </section>

@@ -31,8 +31,8 @@ export default async function Media({ searchParams }: PageProps<"/media">) {
         <h2 className="text-sm font-medium">
           {rows.length} of {captions.length} captions
         </h2>
-        <form className="flex items-center gap-2 text-sm">
-          <input name="q" defaultValue={q} placeholder="Search captions" className="rounded-md border border-ink/25 bg-white px-3 py-1.5" />
+        <form className="flex w-full flex-wrap items-center gap-2 text-sm sm:w-auto">
+          <input name="q" defaultValue={q} placeholder="Search captions" className="min-w-0 flex-1 rounded-md border border-ink/25 bg-white px-3 py-1.5" />
           <select name="sort" defaultValue={sort} className="rounded-md border border-ink/25 bg-white px-2 py-1.5">
             {Object.entries(SORTS).map(([k, v]) => (
               <option key={k} value={k}>{v}</option>

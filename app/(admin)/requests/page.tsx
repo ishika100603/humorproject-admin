@@ -66,8 +66,8 @@ export default async function Requests() {
           const calls = resps.filter((x) => x.request_id === r.id);
           return (
             <details key={r.id} className="group">
-              <summary className="grid cursor-pointer list-none grid-cols-[3rem_2.5rem_1fr_8rem_6rem_9rem_4rem_8rem] items-center gap-3 px-4 py-2.5 text-sm hover:bg-white/60">
-                <span className="text-xs text-ink/40">#{r.id}</span>
+              <summary className="grid cursor-pointer list-none grid-cols-[2.5rem_1fr_auto] items-center gap-3 lg:grid-cols-[3rem_2.5rem_1fr_8rem_6rem_9rem_4rem_8rem] px-4 py-2.5 text-sm hover:bg-white/60">
+                <span className="hidden text-xs text-ink/40 lg:inline">#{r.id}</span>
                 {r.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={r.image_url} alt="" className="h-9 w-9 rounded object-cover" />
@@ -76,17 +76,20 @@ export default async function Requests() {
                 )}
                 <span className="truncate">
                   {fullName(profiles.find((x) => x.id === r.user_id))}
-                  {r.hint && <span className="ml-2 text-xs text-ink/50">“{r.hint}”</span>}
+                  {r.hint && <span className="ml-2 hidden text-xs text-ink/50 sm:inline">“{r.hint}”</span>}
                 </span>
-                <span className="truncate text-xs text-ink/60">{chains.find((x) => x.id === r.chain_id)?.name ?? "Built-in prompt"}</span>
+                <span className="hidden truncate text-xs text-ink/60 lg:inline">{chains.find((x) => x.id === r.chain_id)?.name ?? "Built-in prompt"}</span>
                 <span>
                   <span className={`rounded-full px-2 py-0.5 text-xs ${badge(r.status)}`}>{r.status}</span>
                 </span>
-                <span className="truncate text-xs text-ink/60">{r.model_used ?? "–"}</span>
-                <span className="text-xs tabular-nums text-ink/60">{secs(r)}</span>
-                <span className="text-xs text-ink/50">{fmtDate(r.created_at)}</span>
+                <span className="hidden truncate text-xs text-ink/60 lg:inline">{r.model_used ?? "–"}</span>
+                <span className="hidden text-xs tabular-nums text-ink/60 lg:inline">{secs(r)}</span>
+                <span className="hidden text-xs text-ink/50 lg:inline">{fmtDate(r.created_at)}</span>
               </summary>
               <div className="grid gap-2 bg-white/50 px-4 pb-4 pt-1 text-xs">
+                <p className="text-ink/60 lg:hidden">
+                  #{r.id} · {chains.find((x) => x.id === r.chain_id)?.name ?? "Built-in prompt"} · {r.model_used ?? "no model"} · {secs(r)} · {fmtDate(r.created_at)}
+                </p>
                 <p className="text-ink/60">
                   Asked for {r.caption_count}, saved {r.captions_created}. {calls.length} AI call{calls.length === 1 ? "" : "s"}.
                   {r.error && <span className="ml-1 text-brick">{r.error}</span>}
