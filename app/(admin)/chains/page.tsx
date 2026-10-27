@@ -40,7 +40,7 @@ export default async function Chains() {
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="font-medium">{ch.name}</h2>
                 <span className="text-xs text-ink/50">
-                  {used.length} runs{failed ? `, ${failed} failed` : ""}
+                  {used.length} run{used.length === 1 ? "" : "s"}{failed ? `, ${failed} failed` : ""}
                 </span>
               </div>
               {ch.description && <p className="mt-1 text-xs text-ink/60">{ch.description}</p>}
