@@ -94,6 +94,18 @@ export const RESOURCES: Record<string, Resource> = {
       { name: "note", label: "Note", type: "text", wide: true },
     ],
   },
+  admins: {
+    table: "admin_emails",
+    path: "/admins",
+    title: "Admins",
+    blurb: "Anyone listed here gets full access to this admin panel once they sign in with Google using that email.",
+    noun: "admin",
+    order: { column: "email", ascending: true },
+    fields: [
+      { name: "email", label: "Email", type: "text", required: true, lower: true, placeholder: "grader@columbia.edu" },
+      { name: "note", label: "Note", type: "text", wide: true, placeholder: "Course TA" },
+    ],
+  },
   whitelist: {
     table: "whitelist_email_addresses",
     path: "/whitelist",

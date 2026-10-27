@@ -35,7 +35,7 @@ export async function saveRow(_prev: ActionState, form: FormData): Promise<Actio
       row[f.name] = n;
     } else row[f.name] = v;
   }
-  if (r.table === "whitelist_email_addresses" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(row.email)))
+  if ((r.table === "whitelist_email_addresses" || r.table === "admin_emails") && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(row.email)))
     return { ok: false, message: "That isn't an email address." };
   if (r.table === "allowed_signup_domains") {
     row.domain = String(row.domain).replace(/^@/, "");

@@ -7,7 +7,7 @@ const GROUPS: [string, [string, string][]][] = [
   ["", [["/", "Dashboard"]]],
   ["Content", [["/media", "AI media"], ["/images", "Images"], ["/votes", "Votes"]]],
   ["Caption pipeline", [["/requests", "Generation requests"], ["/responses", "LLM responses"], ["/chains", "Prompt chains"], ["/terms", "Terms"], ["/examples", "Caption examples"], ["/models", "LLM models"], ["/providers", "LLM providers"]]],
-  ["Access", [["/users", "Users"], ["/domains", "Signup domains"], ["/whitelist", "Whitelisted emails"]]],
+  ["Access", [["/users", "Users"], ["/admins", "Admins"], ["/domains", "Signup domains"], ["/whitelist", "Whitelisted emails"]]],
 ];
 
 export default function Nav() {
