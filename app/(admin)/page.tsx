@@ -155,31 +155,36 @@ export default async function Dashboard() {
 
         <div className="card p-5">
           <h2 className="text-sm font-medium">Do shorter captions win?</h2>
-          <p className="text-xs text-ink/50">Average score by caption length</p>
+          <p className="text-xs text-ink/50">Share of votes that were 👍, by caption length</p>
           {[
-            ["9 words or fewer", s.lengths.shortAvg, s.lengths.shortN],
-            ["10+ words", s.lengths.longAvg, s.lengths.longN],
-          ].map(([label, avg, n]) => (
-            <div key={label as string} className="mt-4">
-              <div className="flex justify-between text-sm">
-                <span>{label as string}</span>
-                <span className="tabular-nums">{(avg as number).toFixed(2)}</span>
+            ["9 words or fewer", s.lengths.short, s.lengths.shortN],
+            ["10+ words", s.lengths.long, s.lengths.longN],
+          ].map(([label, g, n]) => {
+            const grp = g as { rate: number; votes: number };
+            return (
+              <div key={label as string} className="mt-4">
+                <div className="flex justify-between text-sm">
+                  <span>{label as string}</span>
+                  <span className="tabular-nums">{grp.votes ? `${grp.rate}% 👍` : "–"}</span>
+                </div>
+                <div className="mt-1 h-2 rounded-full bg-ink/10">
+                  <div className="h-2 rounded-full" style={{ width: `${grp.rate}%`, background: UP }} />
+                </div>
+                <p className="mt-0.5 text-[11px] text-ink/50">
+                  {n as number} caption{n === 1 ? "" : "s"} · {grp.votes} vote{grp.votes === 1 ? "" : "s"}
+                </p>
               </div>
-              <div className="mt-1 h-2 rounded-full bg-ink/10">
-                <div
-                  className="h-2 rounded-full"
-                  style={{ width: `${Math.min(100, Math.abs(avg as number) * 50)}%`, background: (avg as number) >= 0 ? UP : DOWN }}
-                />
-              </div>
-              <p className="mt-0.5 text-[11px] text-ink/50">{n as number} caption{n === 1 ? "" : "s"}</p>
-            </div>
-          ))}
+            );
+          })}
           <p className="mt-4 text-xs text-ink/70">
-            {s.lengths.shortAvg === s.lengths.longAvg
-              ? "No difference yet."
-              : s.lengths.shortAvg > s.lengths.longAvg
-                ? "Short captions are winning. Brevity is the soul of wit."
-                : "Longer captions are scoring better, for now."}
+            {(() => {
+              const { short, long } = s.lengths;
+              if (!short.votes || !long.votes) return "Not enough votes to compare yet.";
+              const gap = short.rate - long.rate;
+              const lead = Math.abs(gap) < 3 ? null : gap > 0 ? "Short captions are ahead" : "Longer captions are ahead";
+              const thin = short.votes < 30 || long.votes < 30 ? " Still too few votes to be sure." : "";
+              return lead ? `${lead} by ${Math.abs(gap)} points.${thin}` : `About the same so far.${thin}`;
+            })()}
           </p>
         </div>
 

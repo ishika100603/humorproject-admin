@@ -63,6 +63,12 @@ export function computeStats(profiles: Profile[], captions: Caption[], votes: Vo
   const short = scored.filter((c) => words(c.caption) <= 9);
   const long = scored.filter((c) => words(c.caption) > 9);
   const avg = (xs: typeof scored) => (xs.length ? xs.reduce((s, c) => s + c.score, 0) / xs.length : 0);
+  // Share of votes that were thumbs up, across every caption in the group
+  const upShare = (xs: typeof scored) => {
+    const up = xs.reduce((s, c) => s + c.up, 0);
+    const all = xs.reduce((s, c) => s + c.total, 0);
+    return { rate: all ? Math.round((up / all) * 100) : 0, votes: all };
+  };
 
   // Which AI model wrote the captions
   const models = new Map<string, number>();
@@ -89,7 +95,7 @@ export function computeStats(profiles: Profile[], captions: Caption[], votes: Vo
     voters: voters.slice(0, 5),
     fan,
     critic,
-    lengths: { shortAvg: avg(short), longAvg: avg(long), shortN: short.length, longN: long.length },
+    lengths: { shortAvg: avg(short), longAvg: avg(long), shortN: short.length, longN: long.length, short: upShare(short), long: upShare(long) },
     models: [...models.entries()].sort((a, b) => b[1] - a[1]),
     withHint,
     unvoted,
