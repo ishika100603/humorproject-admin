@@ -59,7 +59,7 @@ export default async function Dashboard() {
           <div className="mt-4 flex h-40 items-end gap-1.5">
             {s.days.map((d) => (
               <div key={d.key} className="group flex flex-1 flex-col items-center justify-end" title={`${d.label}: ${d.up} up, ${d.down} down`}>
-                <span className="mb-1 text-[10px] tabular-nums text-ink/60 opacity-0 group-hover:opacity-100">{d.up + d.down}</span>
+                <span className={`mb-1 text-[10px] tabular-nums ${d.up + d.down ? "text-ink/70" : "text-ink/35"}`}>{d.up + d.down}</span>
                 <div className="flex w-full flex-col overflow-hidden rounded-sm" style={{ height: `${((d.up + d.down) / maxDay) * 120}px` }}>
                   <div style={{ flex: d.down, background: DOWN }} />
                   <div style={{ flex: d.up, background: UP }} />
@@ -68,9 +68,11 @@ export default async function Dashboard() {
             ))}
           </div>
           <div className="mt-1 flex gap-1.5">
-            {s.days.map((d, i) => (
-              <span key={d.key} className="flex-1 text-center text-[10px] text-ink/50">
-                {i % 2 === 0 ? d.label : ""}
+            {s.days.map((d) => (
+              <span key={d.key} className="flex-1 text-center text-[10px] leading-tight text-ink/50">
+                {d.label.split(" ").map((part, j) => (
+                  <span key={j} className="block">{part}</span>
+                ))}
               </span>
             ))}
           </div>
@@ -189,7 +191,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="card p-5">
-          <h2 className="text-sm font-medium">Behind the captions</h2>
+          <h2 className="text-sm font-medium">Models</h2>
           <h3 className="mt-3 text-xs text-ink/60">AI model that wrote them</h3>
           <ul className="mt-2 grid gap-1.5 text-sm">
             {s.models.map(([m, n]) => (

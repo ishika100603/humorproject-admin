@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { createMedia, deleteCaption, updateCaption, type ActionState } from "./actions";
+import { addCaption, createMedia, deleteCaption, updateCaption, type ActionState } from "./actions";
 
 export function CreateForm() {
   const [state, action, pending] = useActionState<ActionState, FormData>(createMedia, null);
@@ -31,12 +31,12 @@ export function CreateForm() {
         />
       </label>
       <div className="grid gap-2">
-        <input name="caption" placeholder="Caption" maxLength={200} className="rounded-md border border-ink/25 bg-white px-3 py-2 text-sm" />
+        <input name="caption" placeholder="Caption (optional)" maxLength={200} className="rounded-md border border-ink/25 bg-white px-3 py-2 text-sm" />
         <input name="model" placeholder="Model (optional), e.g. gemini-3.5-flash" className="rounded-md border border-ink/25 bg-white px-3 py-1.5 text-xs" />
       </div>
       <div className="grid gap-1">
         <button disabled={pending} className="h-10 rounded-md bg-ink px-5 text-sm text-white hover:bg-navy disabled:opacity-50">
-          {pending ? "Adding…" : "Add media"}
+          {pending ? "Uploading…" : "Upload"}
         </button>
         {state && <p className={`text-xs ${state.ok ? "text-navy" : "text-brick"}`}>{state.message}</p>}
       </div>
@@ -101,6 +101,39 @@ export function DeleteCaption({ id, votes }: { id: number; votes: number }) {
         </button>
       </span>
       {state && !state.ok && <span className="text-brick">{state.message}</span>}
+    </form>
+  );
+}
+
+export function AddCaption({ imageUrl }: { imageUrl: string }) {
+  const [open, setOpen] = useState(false);
+  const [state, action, pending] = useActionState<ActionState, FormData>(addCaption, null);
+  const ref = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state?.ok) {
+      ref.current?.reset();
+      setOpen(false);
+    }
+  }, [state]);
+  if (!open)
+    return (
+      <button onClick={() => setOpen(true)} className="text-xs text-navy underline">
+        + Add a caption
+      </button>
+    );
+  return (
+    <form ref={ref} action={action} className="grid gap-1.5">
+      <input type="hidden" name="image_url" value={imageUrl} />
+      <input name="caption" maxLength={200} autoFocus placeholder="Caption" className="w-full rounded-md border border-ink/25 bg-white px-2 py-1 text-sm" />
+      <div className="flex gap-2 text-xs">
+        <button disabled={pending} className="rounded-md bg-ink px-3 py-1 text-white disabled:opacity-50">
+          {pending ? "Adding…" : "Add"}
+        </button>
+        <button type="button" onClick={() => setOpen(false)} className="underline">
+          Cancel
+        </button>
+      </div>
+      {state && !state.ok && <p className="text-xs text-brick">{state.message}</p>}
     </form>
   );
 }

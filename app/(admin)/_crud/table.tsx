@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { RESOURCES, type Field } from "@/lib/resources";
+import Zoom from "../_ui/zoom";
 import { deleteRow, saveRow, type ActionState } from "./actions";
 
 export type Row = Record<string, unknown> & { id: number };
@@ -10,6 +11,13 @@ type Options = Record<string, { id: number; label: string }[]>;
 const input = "w-full rounded-md border border-ink/25 bg-white px-2 py-1.5 text-sm";
 
 function FieldInput({ f, value, options, form }: { f: Field; value?: unknown; options: Options; form?: string }) {
+  if (f.type === "image")
+    return (
+      <span className="flex items-center gap-2">
+        {typeof value === "string" && value ? <Zoom src={value} /> : null}
+        <input form={form} type="file" name={f.name} accept="image/jpeg,image/png,image/webp" className="w-44 text-xs" />
+      </span>
+    );
   if (f.type === "bool")
     return <input type="checkbox" form={form} name={f.name} defaultChecked={value === undefined ? true : Boolean(value)} className="h-4 w-4 accent-navy" />;
   if (f.type === "ref")
@@ -39,6 +47,7 @@ function FieldInput({ f, value, options, form }: { f: Field; value?: unknown; op
 }
 
 function Show({ f, value, options }: { f: Field; value: unknown; options: Options }) {
+  if (f.type === "image") return typeof value === "string" && value ? <Zoom src={value} size="h-16 w-16" /> : <span className="text-ink/30">No photo</span>;
   if (f.type === "bool")
     return <span className={`rounded-full px-2 py-0.5 text-xs ${value ? "bg-tile text-navy" : "bg-ink/5 text-ink/50"}`}>{value ? "On" : "Off"}</span>;
   if (f.type === "ref") return <>{options[f.name]?.find((o) => o.id === value)?.label ?? "–"}</>;

@@ -15,18 +15,20 @@ export async function createMedia(_prev: ActionState, form: FormData): Promise<A
   if (!(file instanceof File) || file.size === 0) return { ok: false, message: "Pick a photo." };
   if (!file.type.startsWith("image/")) return { ok: false, message: "That isn't an image." };
   if (file.size > 5 * 1024 * 1024) return { ok: false, message: "Photo is over 5 MB." };
-  if (!caption) return { ok: false, message: "Write a caption." };
 
   const path = `admin/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
   const up = await supabase.storage.from("uploads").upload(path, file, { contentType: file.type });
   if (up.error) return { ok: false, message: `Upload failed: ${up.error.message}` };
   const image_url = supabase.storage.from("uploads").getPublicUrl(path).data.publicUrl;
 
-  const { error } = await supabase.from("captions").insert({ image_url, caption, model, created_by: user.id, prompt: "Added by an admin" });
-  if (error) return { ok: false, message: error.message };
+  await supabase.from("images").insert({ url: image_url, storage_path: path, uploaded_by: user.id });
+  if (caption) {
+    const { error } = await supabase.from("captions").insert({ image_url, caption, model, created_by: user.id, prompt: "Added by an admin" });
+    if (error) return { ok: false, message: error.message };
+  }
   revalidatePath("/media");
   revalidatePath("/");
-  return { ok: true, message: "Added. It's live in the app's feed." };
+  return { ok: true, message: caption ? "Added. It's live in the app's feed." : "Photo uploaded. Add a caption to it below to put it in the feed." };
 }
 
 export async function updateCaption(_prev: ActionState, form: FormData): Promise<ActionState> {
@@ -56,4 +58,16 @@ export async function deleteCaption(_prev: ActionState, form: FormData): Promise
   revalidatePath("/media");
   revalidatePath("/");
   return { ok: true, message: "Deleted." };
+}
+
+// Add a caption to a photo that's already uploaded
+export async function addCaption(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const { supabase, user } = await requireAdmin();
+  const image_url = String(form.get("image_url") ?? "");
+  const caption = clean(form.get("caption"));
+  if (!image_url || !caption) return { ok: false, message: "Write a caption." };
+  const { error } = await supabase.from("captions").insert({ image_url, caption, model: "admin", created_by: user.id, prompt: "Added by an admin" });
+  if (error) return { ok: false, message: error.message };
+  revalidatePath("/media");
+  return { ok: true, message: "Added." };
 }

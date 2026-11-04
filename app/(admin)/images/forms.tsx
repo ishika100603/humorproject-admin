@@ -103,3 +103,26 @@ export function ImageCard({ id, url, description, meta }: { id: number; url: str
     </div>
   );
 }
+
+export function DeleteImage({ id }: { id: number }) {
+  const [sure, setSure] = useState(false);
+  const [state, action, pending] = useActionState<ActionState, FormData>(deleteImage, null);
+  if (!sure)
+    return (
+      <button onClick={() => setSure(true)} className="text-xs text-ink/50 underline hover:text-brick">
+        Delete photo
+      </button>
+    );
+  return (
+    <form action={action} className="flex items-center gap-2 text-xs">
+      <input type="hidden" name="id" value={id} />
+      <button disabled={pending} className="text-brick underline">
+        {pending ? "Deleting…" : "Yes, delete"}
+      </button>
+      <button type="button" onClick={() => setSure(false)} className="underline">
+        Keep
+      </button>
+      {state && !state.ok && <span className="text-brick">{state.message}</span>}
+    </form>
+  );
+}

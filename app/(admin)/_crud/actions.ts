@@ -22,6 +22,19 @@ export async function saveRow(_prev: ActionState, form: FormData): Promise<Actio
       row[f.name] = form.get(f.name) === "on";
       continue;
     }
+    if (f.type === "image") {
+      // A new file replaces the photo; no file keeps the current one
+      const file = form.get(f.name);
+      if (file instanceof File && file.size > 0) {
+        if (!file.type.startsWith("image/")) return { ok: false, message: "That isn't an image." };
+        if (file.size > 5 * 1024 * 1024) return { ok: false, message: "Photo is over 5 MB." };
+        const path = `admin/${r.table}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
+        const up = await supabase.storage.from("uploads").upload(path, file, { contentType: file.type });
+        if (up.error) return { ok: false, message: `Upload failed: ${up.error.message}` };
+        row[f.name] = supabase.storage.from("uploads").getPublicUrl(path).data.publicUrl;
+      }
+      continue;
+    }
     let v = clean(form.get(f.name));
     if (f.lower) v = v.toLowerCase();
     if (!v) {

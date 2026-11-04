@@ -22,6 +22,7 @@ export async function uploadImage(_prev: ActionState, form: FormData): Promise<A
   const { error } = await supabase.from("images").insert({ url, storage_path: path, description, uploaded_by: user.id });
   if (error) return { ok: false, message: error.message };
   revalidatePath("/images");
+  revalidatePath("/media");
   return { ok: true, message: "Uploaded." };
 }
 
@@ -36,6 +37,7 @@ export async function updateImage(_prev: ActionState, form: FormData): Promise<A
   if (error) return { ok: false, message: error.message };
   if (!data?.length) return { ok: false, message: "Nothing was saved." };
   revalidatePath("/images");
+  revalidatePath("/media");
   return { ok: true, message: "Saved." };
 }
 
@@ -51,5 +53,6 @@ export async function deleteImage(_prev: ActionState, form: FormData): Promise<A
   if (error) return { ok: false, message: error.message };
   if (img.storage_path) await supabase.storage.from("uploads").remove([img.storage_path]);
   revalidatePath("/images");
+  revalidatePath("/media");
   return { ok: true, message: "Deleted." };
 }

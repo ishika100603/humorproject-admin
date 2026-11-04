@@ -4,7 +4,7 @@
 export type Field = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "number" | "bool" | "ref";
+  type: "text" | "textarea" | "number" | "bool" | "ref" | "image";
   required?: boolean;
   lower?: boolean;
   placeholder?: string;
@@ -42,11 +42,12 @@ export const RESOURCES: Record<string, Resource> = {
     table: "caption_examples",
     path: "/examples",
     title: "Caption examples",
-    blurb: "Captions that landed well. Active ones are shown to the AI as examples of the tone.",
+    blurb: "Reference memes: a photo and the caption that landed. Active ones are shown to the AI as examples of the tone.",
     noun: "example",
     order: { column: "created_at", ascending: false },
     fields: [
-      { name: "image_description", label: "Photo", type: "textarea", required: true, placeholder: "A line out the door at Ferris" },
+      { name: "image_url", label: "Photo", type: "image" },
+      { name: "image_description", label: "What's in it", type: "textarea", required: true, placeholder: "A line out the door at Ferris" },
       { name: "caption", label: "Caption", type: "textarea", required: true },
       { name: "why_it_works", label: "Why it works", type: "textarea" },
       { name: "is_active", label: "Active", type: "bool" },
@@ -65,6 +66,8 @@ export const RESOURCES: Record<string, Resource> = {
       { name: "provider_id", label: "Provider", type: "ref", required: true, ref: { table: "llm_providers", label: "name" } },
       { name: "priority", label: "Priority", type: "number", required: true },
       { name: "temperature", label: "Temperature", type: "number", required: true },
+      { name: "input_cost_per_million", label: "$ / 1M input tokens", type: "number", placeholder: "optional" },
+      { name: "output_cost_per_million", label: "$ / 1M output tokens", type: "number", placeholder: "optional" },
       { name: "is_active", label: "Active", type: "bool" },
     ],
   },

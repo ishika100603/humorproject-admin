@@ -43,6 +43,7 @@ export async function loadAll() {
   ]);
   const error = p.error || c.error || v.error;
   return {
+    supabase,
     user,
     error: error?.message ?? null,
     profiles: (p.data ?? []) as Profile[],
